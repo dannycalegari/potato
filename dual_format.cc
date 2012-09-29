@@ -116,7 +116,7 @@ void packing::dual_format_input_data(ifstream &input_file){
 		Theta.push_back(TWOPI);
 	};
 
-	relabel_vertices(infinity);		// move specified vertex to infinity
+	relabel_vertices(infinity-1);		// move specified vertex to infinity
 	
 	compute_OPP();			// generate OPP data
 	compute_TURN();			// generate TURN data

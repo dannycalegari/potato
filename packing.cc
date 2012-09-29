@@ -225,6 +225,7 @@ dbl packing::Fitness(int k){
 	int i,j;
 	dbl e,A;
 	e=0.0;
+#pragma omp parallel for private(A) reduction(+:e)
 	for(i=0;i<(int) ADJ.size()-k;i++){	// 7
 		A=0.0;
 		for(j=0;j<(int) ADJ[i].size();j++){
@@ -239,6 +240,7 @@ dbl	packing::E(){	// functional
 	dbl e;
 	int i,j;
 	e=0.0;
+#pragma omp parallel for private(j) reduction(+:e)
 	for(i=0;i<(int) ADJ.size();i++){
 		for(j=0;j<(int) ADJ[i].size();j++){
 			e=e+Ltilde(i,j)*(Atilde(i,j)-PIONTWO);
@@ -261,13 +263,18 @@ dvec packing::JAC(){	// dE/dU
 	vv=1+ADJ[v].size();
 	
 	E.resize(0);
+	dbl Edata[ADJ.size()];
+#pragma omp parallel for private(j,e)
 	for(i=0;i<(int) ADJ.size()-vv;i++){
 		e=Theta[i];
 		for(j=0;j<(int) ADJ[i].size();j++){
 			e=e-Atilde(i,j);
 		};
-		E.push_back(e);
+//		E.push_back(e);
+		Edata[i] = e;
 	};
+	for(i=0;i<(int) ADJ.size()-vv;i++)
+		E.push_back(Edata[i]);
 	return(E);
 };	
 

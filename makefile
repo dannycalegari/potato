@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-g -Wall -O3 -fast
+CFLAGS=-g -Wall -O3 -fast -fopenmp
 IFLAGS=-I/usr/X11R6/include
 LFLAGS=-L/usr/X11R6/lib -lX11
 all: potato
