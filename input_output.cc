@@ -3,7 +3,7 @@
 void write(dvec J){
 	int i;
 	for(i=0;i<(int) J.size();i++){
-		cout << J[i] << " ";
+		cout << J[i] << "\n";
 	};
 	cout << "\n";
 };

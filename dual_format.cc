@@ -33,6 +33,7 @@ void packing::dual_format_input_data(ifstream &input_file){
 	assert(S=="VERTICES");
 	input_file >> vertices;
 	input_file >> infinity;
+	infinity--;		// GAP format starts counting at 1
 	input_file >> S;
 	assert(S=="FACES");
 	input_file >> faces;
@@ -107,7 +108,7 @@ void packing::dual_format_input_data(ifstream &input_file){
 	
 	U.resize(0);
 	for(i=0;i<vertices;i++){
-		U.push_back(0.0);
+		U.push_back(0);
 	};
 	
 	// desired angle sums are 2pi
@@ -115,8 +116,12 @@ void packing::dual_format_input_data(ifstream &input_file){
 	for(i=0;i<vertices;i++){
 		Theta.push_back(TWOPI);
 	};
+	for(i=0;i<(int) ADJ[infinity].size();i++){	// for each neighbor of infinity
+		j=ADJ[infinity][i];
+		U[j]=-L[infinity][i];	// adjust U vectors on boundary vertices to make Ltilde=0
+	};
 
-	relabel_vertices(infinity-1);		// move specified vertex to infinity
+	relabel_vertices(infinity);		// move specified vertex to infinity
 	
 	compute_OPP();			// generate OPP data
 	compute_TURN();			// generate TURN data

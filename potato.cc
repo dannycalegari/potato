@@ -35,7 +35,7 @@ using namespace std;
 #define ivec		vector<int>
 #define imat		vector<vector<int> >
 #define ivl			vector<vector<int> >	// list of ivecs
-#define dbl			double					// can replace this with arbitrary precision later
+#define dbl			long double					// can replace this with arbitrary precision later
 #define dvec		vector<dbl>
 #define dmat		vector<vector<dbl> >
 #define dvl			vector<vector<dbl> >	// list of dvecs
@@ -58,7 +58,7 @@ int main(int argc, char *argv[]){
 	ifstream input_file;
 	ofstream output_file;
 	string S;
-	bool b;
+	bool b,finished;
 	
 	cout.precision(dubbl::digits10);
 
@@ -85,11 +85,30 @@ int main(int argc, char *argv[]){
 		input_file.close();
 	};	
 		
-	P.flow_to_packing(0.00001);
+	P.flow_to_packing(0.0000000001);
 	P.test_consistency();
 	P.determine_layout_order();
 	P.determine_layout_position();
-
+	
+	setup_graphics();
+	usleep(100000);
+	P.draw_packing();
+	P.draw_eps();
+	XFlush(display);
+	finished=false;
+	while(finished==false){ 
+		XNextEvent(display, &report);
+        switch (report.type) {
+        	case KeyPress:
+				finished=true;
+				XCloseDisplay(display);
+				exit(0);
+				break;
+			default:
+				break;
+		};
+	};
+	
 	if(S=="-df"){
 		P.project_to_sphere();
 		P.restore_correct_labels();
@@ -99,12 +118,7 @@ int main(int argc, char *argv[]){
 		output_file.close();
 		return 0;
 	};
-	
-	setup_graphics();
-	usleep(100000);
-	P.draw_packing();
-	XFlush(display);
-	while(1){ };
+
 	
 	return 0;
 }

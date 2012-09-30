@@ -149,3 +149,31 @@ void packing::draw_packing(){		// graphical output
 	XFlush(display);
 };
 
+void packing::draw_eps(){		// eps output
+	int i,j;
+	ofstream eps_out_file;
+	
+	typedef std::numeric_limits< dbl > dubbl;
+
+	
+	eps_out_file.open("potato_packing.eps");
+	eps_out_file.precision(dubbl::digits10);
+
+    eps_out_file << "%!PS-Adobe-2.0 EPSF-2.0 \n";
+    eps_out_file << "%%BoundingBox: 0 0 500 500 \n";
+    eps_out_file << "gsave 200 200 scale 1.25 1.25 translate 0 setlinewidth \n";
+    eps_out_file << "/l {4 dict begin /y2 exch def /x2 exch def /y1 exch def /x1 exch def \n";
+    eps_out_file << "newpath x1 y1 moveto x2 y2 lineto stroke end} def \n";
+//	point P,Q;
+	for(i=0;i<(int) ADJ.size()-1;i++){
+//		P=center_to_point(POS[i]);
+		for(j=0;j<(int) ADJ[i].size();j++){
+			if(i<ADJ[i][j] && (ADJ[i][j]!=(int) ADJ.size()-1)){
+//				Q=center_to_point(POS[ADJ[i][j]]);
+				eps_out_file << POS[i].x << " " << POS[i].y << " " << POS[ADJ[i][j]].x << " " << POS[ADJ[i][j]].y << " l\n";
+			};
+		};
+	};
+	eps_out_file << "grestore %eof \n";
+};
+

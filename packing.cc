@@ -81,6 +81,7 @@ class packing{
 		void determine_layout_order();		// compute ATT and LAY
 		void determine_layout_position();	// compute POS
 		void draw_packing();	// graphical output
+		void draw_eps();	// eps output file
 		void rescale();		// rescale so radius of 0 and radius of infinity are inverse
 		void project_to_sphere();	// project center list to sphere
 		void restore_correct_labels();	// restore labels from SWAP_LIST
@@ -334,6 +335,7 @@ void packing::flow_to_packing(dbl accuracy){	// adjust U until angle sums at all
 		} else {
 			speed=dot(S-SOLD,J-JOLD)/norm(J-JOLD);	// Barzilai-Borwein gradient method
 		};
+#pragma omp parallel for private(i)		// let's see what this does!
 		for(i=0;i<(int) U.size()-j;i++){	// adjust U for all but last j vertices
 			U[i]=U[i]-J[i]*speed;
 		};
