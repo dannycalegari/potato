@@ -43,7 +43,9 @@ line describes a triangle. The line above describes the triangle with vertices i
 jk, ik, ij (*not* L as above!). The words VERTICES and FACES must appear as text in the file in the appropriate places.
 
 To run the program on a file in default format, run ./potato filename
+
 To run the program on a file in no length format, run ./potato -nl filename
+
 To run the program on a file in dual format, run ./potato -df filename
 
 For a file in dual format, the program outputs a list of packed centers stereographically projected to the unit sphere in 
