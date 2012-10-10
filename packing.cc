@@ -309,7 +309,7 @@ dmat packing::DJAC(){	// d^2E/dU^2
 };
 
 void packing::flow_to_packing(dbl accuracy){	// adjust U until angle sums at all vertices equal Theta
-	dbl speed, fit, bound;
+	dbl speed, fit, ang, bound;
 	dvec J,JOLD;
 	dvec S,SOLD;
 	int i,j,v,count;
@@ -327,7 +327,7 @@ void packing::flow_to_packing(dbl accuracy){	// adjust U until angle sums at all
 	bound=10.0;
 
 	while(fit>accuracy){			// sum of abs of angle defects for all but last j vertices
-		fit=Fitness(j);
+//		fit=Fitness(j);
 		J=JAC();
 		S=U;
 		if(count==0){		// should determine first step size by line search
@@ -335,9 +335,12 @@ void packing::flow_to_packing(dbl accuracy){	// adjust U until angle sums at all
 		} else {
 			speed=dot(S-SOLD,J-JOLD)/norm(J-JOLD);	// Barzilai-Borwein gradient method
 		};
+		fit=0.0;
 #pragma omp parallel for private(i)		// let's see what this does!
 		for(i=0;i<(int) U.size()-j;i++){	// adjust U for all but last j vertices
-			U[i]=U[i]-J[i]*speed;
+			ang=J[i];
+			fit=fit+abs(ang);
+			U[i]=U[i]-ang*speed;
 		};
 		JOLD=J;
 		SOLD=S;
